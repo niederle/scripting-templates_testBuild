@@ -121,6 +121,11 @@ if(multiXFactor) {
   xFactor <- columnHeader
 }
 if(multiFacetBy) {
+  columnHeader <- paste(facetBy, collapse = " + ")
+  subdata <- subdata %>% unite({{columnHeader}}, all_of(facetBy), sep = " + ", remove = FALSE)
+  facetBy <- columnHeader
+}
+if(multiColorBy) {
   columnHeader <- paste(colorBy, collapse = " + ")
   subdata <- subdata %>% unite({{columnHeader}}, all_of(colorBy), sep = " + ", remove = FALSE)
   colorBy <- columnHeader
@@ -138,7 +143,7 @@ if(showDatapoints) {
 }
 
 
-p <- p + facet_wrap( ~ variable, scales = "free")
+p <- p + facet_wrap( ~ get(facetBy), scales = "free")
 
 print(p)
 
