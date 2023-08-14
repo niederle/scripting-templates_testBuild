@@ -105,10 +105,16 @@ if(!is.null(colorBy)) {
 keepColumns <- unique(keepColumns)
 subdata <- kIn %>% select(all_of(keepColumns))
 
+# combine columns if multiple selection
 if(length(xFactor) >= 2) {
   columnHeader <- paste(xFactor, collapse = " + ")
   subdata <- subdata %>% unite({{columnHeader}}, all_of(xFactor), sep = " + ", remove = FALSE)
   xFactor <- columnHeader
+}
+if(length(colorBy) >= 2) {
+  columnHeader <- paste(colorBy, collapse = " + ")
+  subdata <- subdata %>% unite({{columnHeader}}, all_of(colorBy), sep = " + ", remove = FALSE)
+  colorBy <- columnHeader
 }
 
 data <- subdata %>% pivot_longer(all_of(pivotBy), names_to = "variable", values_to = "value")
