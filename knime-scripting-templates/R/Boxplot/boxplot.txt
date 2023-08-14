@@ -1,0 +1,103 @@
+########################################################################################
+# name: Boxplot 
+# author: Antje Janosch
+# category: basic
+# preview: 
+
+Boxplot template
+
+######
+
+<rgg>
+<!--1. Title and short description -->
+
+<h3 text="Boxplot" aligment="center" span="full"/>
+<separator label="Description" span="full"/>
+<labelarea span="full">Boxplot template</labelarea>
+<gaprow height="1"/>
+
+<separator label="Options" span="full"/>
+<gaprow height="2"/>
+
+# 1. Parameter selection
+<group>
+
+measurements = c(<panellistbox label="select columns with values for boxplot" items="$$$NUM_ATTRIBUTES$$$" span="full"/>)
+
+#define use of flow variables
+<hbox>  
+<checkbox label="use flow variable" var="useFlowVarForMeasurements" selected="false" />
+<textfield label="flow variable:" var="flowVarForMeasurement" data-type="text" default-value= "" size="10" />
+</hbox>
+
+<separator label="" span="full"/>
+
+#define x-axis, grid and color group
+<hbox>  
+xFactor = c(<listbox label="x-axis" items="-NO SELECTION-,-USE COLUMN SELECTION-,$$$STR_ATTRIBUTES$$$"/>)
+facetBy = c(<listbox label="2D grid grouping parameters" items="-NO SELECTION-,-USE COLUMN SELECTION-,$$$STR_ATTRIBUTES$$$"/>)
+colorBy = c(<listbox label="colored by" items="-NO SELECTION-,-USE COLUMN SELECTION-,$$$STR_ATTRIBUTES$$$"/>)
+</hbox>
+
+<combobox var="colorPalette" items="ggplot default,Set1,Set2,Set3,Accent,Dark2,Paired,Spectral,RdYlGn,RdYlBu,RdGy,RdBu,PuOr,PrGn,PiYG,BrBG,Blues,BuGn,BuPu,GnBu,Greens,Greys,Oranges,OrRd,PuBu,PuBuGn,PuRd,Purples,RdPu,Reds,YlGn,YlGnBu,YlOrBr,YlOrRd,KNIME colors" label="Color palette:"/>
+
+<separator label="" span="full"/>
+
+<hbox>
+<checkbox label="show outliers" var="showOutliers" selected="true" />
+<checkbox label="show notches" var="showNotches" selected="false" />
+</hbox>
+<hbox>
+<checkbox label="show single datapoints" var="showDatapoints" selected="false" />
+jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" default-value="0.5"/>))
+</hbox>
+
+</group>
+
+# 2. r-code
+<![CDATA[
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+#TODO: check use of flowvars for measurements
+
+# no measurement and/or factor column(s) selected
+if(is.null(measurements)) stop("Error: Template initialization fails - no column(s) for bar height selected") 
+if(is.null(xFactor)) stop("Error: Template initialization fails - no column(s) for x-axis selected") 
+
+# if outliers should be displayed, set outlier shape to NULL (default)
+if(showOutliers)
+  outlierShape <- NULL
+# if datapoints should be displayed too, hide outliers with outlier shape = NA
+if(showDatapoints)
+  outlierShape <- NA
+
+if(!is.null(facetBy) && "-USE COLUMN SELECTION-" %in% facetBy) {
+  facetBy <- measurements
+  pivotBy <- facetBy
+}
+
+keepColumns <- unique(c(measurements, xFactor, facetBy, colorBy))
+subdata <- kIn %>% select(all_of(keepColumns))
+
+if(length(xFactor) >= 2) {
+  columnHeader <- paste(xFactor, collapse = " + ")
+  subdata <- subdata %>% unite({{columnHeader}}, all_of(xFactor), sep = " + ", remove = FALSE)
+  xFactor <- columnHeader
+}
+
+data <- subdata %>% pivot_longer(all_of(pivotBy), names_to = "variable", values_to = "value")
+
+p <- ggplot(data, aes(x = get(xFactor), y = value, fill = variable)) + geom_boxplot(notch = showNotches, outlier.shape = outlierShape)
+
+if(showDatapoints) {
+  p <- p + geom_point(position = position_jitterdodge(jitter.width = jitterWidth), shape=21)
+}
+
+print(p)
+
+
+]]>
+</rgg>
