@@ -92,7 +92,7 @@ multiFacetBy <- FALSE
 if("-NO SELECTION-" %in% facetBy)
   facetBy = NULL
 if("-USE COLUMN SELECTION-" %in% facetBy) {
-  facteBy <- "variable"
+  facetBy <- "variable"
 } else {
   if(!is.null(facetBy)) {
     keepColumns <- c(keepColumns, facetBy)
