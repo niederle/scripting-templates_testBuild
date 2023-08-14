@@ -1,0 +1,59 @@
+########################################################################################
+# name: Cumulative Density Function (cdf)
+# author: Marc Bickle, Antje Janosch, Rico
+# category: basic/cdf
+# preview: CDF.png
+
+This plot is useful for plotting the cumulative density function of up to 9 populations and verify whether and how they differ
+
+######
+
+<rgg>
+
+<!--1. Title and short description -->
+
+<h3 text="$$$TEMPLATE_NAME$$$" aligment="center" span="full"/>
+<separator label="Description" span="full"/>
+<labelarea span="full">$$$TEMPLATE_DESC$$$</labelarea>
+<gaprow height="1"/>
+
+<!-- 2. Configuration-->
+
+<separator label="Options" span="full"/>
+<gaprow height="1"/>
+
+# Parameter selection
+<group>
+
+# a) Define column with categorical values
+group = <combobox label="Group" items="$$$STR_ATTRIBUTES$$$" />;
+
+
+# b) Define which parameter you would like to visualize
+params =  c(<panellistbox label="Parameters" items="$$$NUM_ATTRIBUTES$$$" span="3"/>)
+
+</group>
+
+
+<![CDATA[
+
+# R code
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(tibble)
+
+kIn_test <- as_tibble(kIn)
+
+# 1) subselect table for relevant data
+# 2) reshape to long
+data <- kIn %>% select(all_of(c(group, params))) %>% 
+  pivot_longer(all_of(params), names_to = "variable", values_to = "value")
+
+# plot data
+p <- ggplot(data, aes(x = value, colour = get(group))) + stat_ecdf() + facet_wrap( ~ variable, scales = "free")
+p <- p + theme_bw(base_size = 16) + labs(y = "Probability", color = group)
+print(p)
+
+]]>
+</rgg>
