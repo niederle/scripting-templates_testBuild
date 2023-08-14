@@ -77,47 +77,56 @@ if(showDatapoints)
 
 keepColumns <- measurements
 
+multiXFactor <- FALSE
 # xFactor should never be NULL
-if("-ROW ID-" %in% xFactor)
-  # TODO
-if("-USE COLUMN SELECTION-" %in% colorBy)
+if("-ROW ID-" %in% xFactor){}
+# TODO
+if("-USE COLUMN SELECTION-" %in% xFactor) {
   xFactor <- measurements
-keepColumns <- c(keepColumns, xFactor)
-
-pivotBy = NULL
-if("-NO SELECTION-" %in% facetBy)
-  facetBy = NULL
-if("-USE COLUMN SELECTION-" %in% facetBy)
-  facetBy <- measurements
-if(!is.null(facetBy)) {
-  pivotBy <- facetBy
-  keepColumns <- c(keepColumns, facetBy)
+} else {
+  keepColumns <- c(keepColumns, xFactor)
+  if(length(xFactor) >= 2) multiXFactor <- TRUE
 }
 
+multiFacetBy <- FALSE
+if("-NO SELECTION-" %in% facetBy)
+  facetBy = NULL
+if("-USE COLUMN SELECTION-" %in% facetBy) {
+  facteBy <- "variable"
+} else {
+  if(!is.null(facetBy)) {
+    keepColumns <- c(keepColumns, facetBy)
+    if(length(facetBy) >= 2) multiFacetBy <- TRUE
+  }
+}
+
+multiColorBy <- FALSE
 if("-NO SELECTION-" %in% colorBy)
   colorBy = NULL
-if("-USE COLUMN SELECTION-" %in% colorBy)
-  colorBy <- measurements
-if(!is.null(colorBy)) {
-  keepColumns <- c(keepColumns, colorBy)
+if("-USE COLUMN SELECTION-" %in% colorBy) {
+  colorBy <- "variable"
+} else {
+  if(!is.null(colorBy)) {
+    keepColumns <- c(keepColumns, colorBy)
+    if(length(colorBy) >= 2) multiColorBy <- TRUE
+  }
 }
 
 keepColumns <- unique(keepColumns)
 subdata <- kIn %>% select(all_of(keepColumns))
 
-# combine columns if multiple selection
-if(length(xFactor) >= 2) {
+if(multiXFactor) {
   columnHeader <- paste(xFactor, collapse = " + ")
   subdata <- subdata %>% unite({{columnHeader}}, all_of(xFactor), sep = " + ", remove = FALSE)
   xFactor <- columnHeader
 }
-if(length(colorBy) >= 2) {
+if(multiFacetBy) {
   columnHeader <- paste(colorBy, collapse = " + ")
   subdata <- subdata %>% unite({{columnHeader}}, all_of(colorBy), sep = " + ", remove = FALSE)
   colorBy <- columnHeader
 }
 
-data <- subdata %>% pivot_longer(all_of(pivotBy), names_to = "variable", values_to = "value")
+data <- subdata %>% pivot_longer(all_of(measurements), names_to = "variable", values_to = "value")
 
 p <- ggplot(data, aes(x = get(xFactor), y = value)) + geom_boxplot(notch = showNotches, outlier.shape = outlierShape)
 if(!is.null(colorBy))
@@ -129,11 +138,9 @@ if(showDatapoints) {
 }
 
 
-
 p <- p + facet_wrap( ~ variable, scales = "free")
 
 print(p)
-
 
 ]]>
 </rgg>
