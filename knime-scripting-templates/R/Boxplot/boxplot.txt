@@ -68,18 +68,41 @@ if(is.null(measurements)) stop("Error: Template initialization fails - no column
 if(is.null(xFactor)) stop("Error: Template initialization fails - no column(s) for x-axis selected") 
 
 # if outliers should be displayed, set outlier shape to NULL (default)
+outlierShape <- NA
 if(showOutliers)
   outlierShape <- NULL
 # if datapoints should be displayed too, hide outliers with outlier shape = NA
 if(showDatapoints)
   outlierShape <- NA
 
-if(!is.null(facetBy) && "-USE COLUMN SELECTION-" %in% facetBy) {
+keepColumns <- measurements
+
+# xFactor should never be NULL
+if("-ROW ID-" %in% xFactor)
+  # TODO
+if("-USE COLUMN SELECTION-" %in% colorBy)
+  xFactor <- measurements
+keepColumns <- c(keepColumns, xFactor)
+
+pivotBy = NULL
+if("-NO SELECTION-" %in% facetBy)
+  facetBy = NULL
+if("-USE COLUMN SELECTION-" %in% facetBy)
   facetBy <- measurements
+if(!is.null(facetBy)) {
   pivotBy <- facetBy
+  keepColumns <- c(keepColumns, facetBy)
 }
 
-keepColumns <- unique(c(measurements, xFactor, facetBy, colorBy))
+if("-NO SELECTION-" %in% colorBy)
+  colorBy = NULL
+if("-USE COLUMN SELECTION-" %in% colorBy)
+  colorBy <- measurements
+if(!is.null(colorBy)) {
+  keepColumns <- c(keepColumns, colorBy)
+}
+
+keepColumns <- unique(keepColumns)
 subdata <- kIn %>% select(all_of(keepColumns))
 
 if(length(xFactor) >= 2) {
@@ -90,11 +113,18 @@ if(length(xFactor) >= 2) {
 
 data <- subdata %>% pivot_longer(all_of(pivotBy), names_to = "variable", values_to = "value")
 
-p <- ggplot(data, aes(x = get(xFactor), y = value, fill = variable)) + geom_boxplot(notch = showNotches, outlier.shape = outlierShape)
+p <- ggplot(data, aes(x = get(xFactor), y = value)) + geom_boxplot(notch = showNotches, outlier.shape = outlierShape)
+if(!is.null(colorBy))
+  p <- p + aes(fill = get(colorBy))
 
 if(showDatapoints) {
-  p <- p + geom_point(position = position_jitterdodge(jitter.width = jitterWidth), shape=21)
+  if(!is.null(colorBy)) p <- p + geom_point(position = position_jitterdodge(jitter.width = jitterWidth), shape=21)
+  else p <- p + geom_point(position = position_jitter(width = jitterWidth), shape=21)
 }
+
+
+
+p <- p + facet_wrap( ~ variable, scales = "free")
 
 print(p)
 
