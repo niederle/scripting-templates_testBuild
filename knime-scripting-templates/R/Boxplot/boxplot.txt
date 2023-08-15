@@ -71,11 +71,8 @@ jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" defa
 
 <vbox>
 <hbox>
-<radiobutton var="yScales" label="free y scales" return-value-by-selected="free_y" button-group="yscales" selected="TRUE"/>
-<radiobutton var="yScales" label="fixed y scales" return-value-by-selected="fixed" button-group="yscales"/>
-<radiobutton var="yScales" label="custom (fixed) y-limits:" return-value-by-selected="custom" button-group="yscales"/>
-<vector  var="ylims" label="[ymin,ymax]"
-size="2" default-value=""/>
+<listbox var="yScales" label="select mode for y-scales" items="free_y,fixed,custom" visible-row-count="3" />
+<vector  var="ylims" label="custom y-scales [ymin,ymax]" size="2" default-value=""/>
 </hbox>
 <checkbox label="flip x/y coordinates" var="flipCoords" selected="false" />
 </vbox>
@@ -88,6 +85,18 @@ size="2" default-value=""/>
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+
+# yScales can be "free_y", "fixed", "custom"
+gg_scales = yScales
+gg_ylims <- NULL
+if(yScales == "custom") {
+  gg_ylims <- as.numeric(ylims)
+  if(any(is.na(gg_ylims)))
+    stop("Error: Template initialization fails - custom y-limits do require numerical min/max values") 
+  if(gg_ylims[1] >= gg_ylims[2])
+    stop("Error: Template initialization fails - custom y-limits min has to be smaller than max") 
+  gg_scales = "fixed"
+}
 
 #TODO: check use of flowvars for measurements
 if(useFlowVarForXFactor) xFactor <- flowVarForXFactor
@@ -172,8 +181,9 @@ if(showDatapoints) {
 }
 
 
-if(!is.null(facetBy)) p <- p + facet_wrap( ~ get(facetBy), scales = "free")
-if(flipCoords) p <- p + coord_flip()
+if(!is.null(facetBy)) p <- p + facet_wrap( ~ get(facetBy), scales = gg_scales)
+if(yScales == "custom") p <- p + coord_cartesian(ylim = gg_ylims)
+if(flipCoords) p <- p + coord_flip(ylim = gg_ylims)
 
 print(p)
 
