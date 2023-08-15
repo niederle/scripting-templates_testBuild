@@ -68,7 +68,17 @@ jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" defa
 </hbox>
 
 <separator label="Coordinate Options" span="full"/>
-<checkbox label="flip coordinates" var="flipCoords" selected="false" />
+
+<vbox>
+<hbox>
+<radiobutton var="yScales" label="free y scales" return-value-by-selected="free_y" button-group="yscales" selected="TRUE"/>
+<radiobutton var="yScales" label="fixed y scales" return-value-by-selected="fixed" button-group="yscales"/>
+<radiobutton var="yScales" label="custom (fixed) y-limits:" return-value-by-selected="custom" button-group="yscales"/>
+<vector  var="ylims" label="[ymin,ymax]"
+size="2" default-value=""/>
+</hbox>
+<checkbox label="flip x/y coordinates" var="flipCoords" selected="false" />
+</vbox>
 
 </group>
 
