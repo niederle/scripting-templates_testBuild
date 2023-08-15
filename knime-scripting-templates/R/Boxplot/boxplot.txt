@@ -26,8 +26,8 @@ measurements = c(<panellistbox label="select columns with values for boxplot" it
 
 #define use of flow variables
 <hbox>  
-<checkbox label="use flow variable" var="useFlowVarForMeasurements" selected="false" />
-<textfield label="flow variable:" var="flowVarForMeasurement" data-type="text" default-value= "" size="10" />
+<checkbox label="use flow variable (meas)" var="useFlowVarForMeasurements" selected="false" />
+<textfield label="flow variable (meas)" var="flowVarForMeasurement" data-type="text" default-value= "" size="10" />
 </hbox>
 
 <separator label="" span="full"/>
@@ -35,24 +35,24 @@ measurements = c(<panellistbox label="select columns with values for boxplot" it
 #define x-axis, grid and color group
 <hbox>  
 xFactor = c(<listbox label="x-axis" items="-USE COLUMN SELECTION-,$$$STR_ATTRIBUTES$$$"/>)
-<checkbox label="use flow variable" var="useFlowVarForXFactor" selected="false" />
-<textfield label="flow variable:" var="flowVarForXFactor" data-type="text" default-value= "" size="10" />
+<checkbox label="use flow variable (xFactor)" var="useFlowVarForXFactor" selected="false" />
+<textfield label="flow variable (xFactor)" var="flowVarForXFactor" data-type="text" default-value= "" size="10" />
 </hbox>
 
 <separator label="" span="full"/>
 
 <hbox>
 facetBy = c(<listbox label="2D grid grouping parameters" items="-NO SELECTION-,-USE COLUMN SELECTION-,$$$STR_ATTRIBUTES$$$"/>)
-<checkbox label="use flow variable" var="useFlowVarForGrid" selected="false" />
-<textfield label="flow variable:" var="flowVarForGrid" data-type="text" default-value= "" size="10" />
+<checkbox label="use flow variable (grid)" var="useFlowVarForGrid" selected="false" />
+<textfield label="flow variable (grid)" var="flowVarForGrid" data-type="text" default-value= "" size="10" />
 </hbox>
 
 <separator label="" span="full"/>
 
 <hbox>
 colorBy = c(<listbox label="colored by" items="-NO SELECTION-,-USE COLUMN SELECTION-,$$$STR_ATTRIBUTES$$$"/>)
-<checkbox label="use flow variable" var="useFlowVarForColor" selected="false" />
-<textfield label="flow variable:" var="flowVarForColor" data-type="text" default-value= "" size="10" />
+<checkbox label="use flow variable (color)" var="useFlowVarForColor" selected="false" />
+<textfield label="flow variable (color" var="flowVarForColor" data-type="text" default-value= "" size="10" />
 <combobox var="colorPalette" items="ggplot default,Set1,Set2,Set3,Accent,Dark2,Paired,Spectral,RdYlGn,RdYlBu,RdGy,RdBu,PuOr,PrGn,PiYG,BrBG,Blues,BuGn,BuPu,GnBu,Greens,Greys,Oranges,OrRd,PuBu,PuBuGn,PuRd,Purples,RdPu,Reds,YlGn,YlGnBu,YlOrBr,YlOrRd,KNIME colors" label="Color palette:"/>
 </hbox>
 
@@ -78,6 +78,8 @@ library(tidyr)
 
 #TODO: check use of flowvars for measurements
 if(useFlowVarForXFactor) xFactor <- flowVarForXFactor
+if(useFlowVarForGrid) facetBy <- flowVarForGrid
+if(useFlowVarForColor) colorBy <- flowVarForColor
 
 # no measurement and/or factor column(s) selected
 if(is.null(measurements)) stop("Error: Template initialization fails - no column(s) for bar height selected") 
