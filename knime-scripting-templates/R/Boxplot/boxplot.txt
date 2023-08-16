@@ -56,7 +56,7 @@ facetBy = c(<listbox label="2D grid grouping parameters" items="-NO SELECTION-,-
 <hbox>
 colorBy = c(<listbox label="colored by" items="-NO SELECTION-,-USE COLUMN SELECTION-,$$$STR_ATTRIBUTES$$$"/>)
 <checkbox label="use flow variable (color)" var="useFlowVarForColor" selected="false" />
-<textfield label="flow variable (color" var="flowVarForColor" data-type="text" default-value= "" size="10" />
+<textfield label="flow variable (color)" var="flowVarForColor" data-type="text" default-value= "" size="10" />
 <combobox var="colorPalette" items="ggplot default,Set1,Set2,Set3,Accent,Dark2,Paired,Spectral,RdYlGn,RdYlBu,RdGy,RdBu,PuOr,PrGn,PiYG,BrBG,Blues,BuGn,BuPu,GnBu,Greens,Greys,Oranges,OrRd,PuBu,PuBuGn,PuRd,Purples,RdPu,Reds,YlGn,YlGnBu,YlOrBr,YlOrRd,KNIME colors" label="Color palette:"/>
 </hbox>
 
@@ -75,11 +75,21 @@ jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" defa
 
 <vbox>
 <hbox>
-<listbox var="yScales" label="select mode for y-scales" items="free_y,fixed,custom" visible-row-count="3" />
+<combobox var="yScales" items="free_y,fixed,custom" label="select mode for y-scales"/>
 <vector  var="ylims" label="custom y-scales [ymin,ymax]" size="2" default-value=""/>
 </hbox>
 <checkbox label="flip x/y coordinates" var="flipCoords" selected="false" />
 </vbox>
+
+<separator label="Axis Options" span="full"/>
+
+<hbox>
+<vbox>
+<textfield label="x-Axis title" var="xAxisTitle" data-type="text" default-value= "" size="10" />
+<textfield label="y-axis title" var="yAxisTitle" data-type="text" default-value= "" size="10" />
+</vbox>
+<combobox var="xAxisOrientation" items="0,45,90" label="angle of x-axis"/>
+</hbox>
 
 </group>
 
