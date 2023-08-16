@@ -93,6 +93,7 @@ jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" defa
 
 <separator label="General Layout Options" span="full"/>
 
+<textfield label="plot title" var="plotTitle" data-type="text" default-value= "" size="10" />
 <hbox>
 <combobox var="plotTheme" items="black-white,grey,linedraw,light,classic,minimal" label="plot theme"/>
 <vector  var="baseSize" label="base font size" size="1" default-value="18"/>
@@ -139,6 +140,9 @@ if(flipCoords) gg_yAxisAngle <- as.numeric(xAxisOrientation) else gg_xAxisAngle 
 
 gg_baseSize <- 14
 if(!is.na(as.numeric(baseSize))) gg_baseSize <- as.numeric(baseSize) else stop("Error: Template initialization fails - plot base size does require a numerical value")
+
+gg_title <- waiver()
+if(!is.na(plotTitle)) gg_title <- plotTitle
 
 # check use of flowvars for measurements
 if(useFlowVarForXFactor) xFactor <- flowVarForXFactor
@@ -252,6 +256,7 @@ if(plotTheme == "minimal") p <- p + theme_minimal(base_size = gg_baseSize)
 
 if(flipCoords) p <- p + coord_flip(ylim = gg_ylims) else p <- p + coord_cartesian(ylim = gg_ylims)
 p <- p + guides(x = guide_axis(title = gg_xAxisTitle, angle = gg_xAxisAngle), y = guide_axis(title = gg_yAxisTitle, angle = gg_yAxisAngle))
+p <- p + labs(title = gg_title)
 
 print(p)
 
