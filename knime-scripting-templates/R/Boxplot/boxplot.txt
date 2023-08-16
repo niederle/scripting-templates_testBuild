@@ -104,7 +104,7 @@ jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" defa
 <textfield label="legend title" var="legendTitle" data-type="text" default-value= "" size="10" />
 <hbox>
 <combobox var="legendPosition" items="right,left,bottom,top,none,custom position" label="legend position"/>
-<vector  var="legendCoordinates" label="custom legend coordinates [x,y]" size="2" default-value=""/>
+<vector  var="legendCoordinates" label="custom legend x/y coordinates [0;1]" size="2" default-value=""/>
 </hbox>
 
 </group>
