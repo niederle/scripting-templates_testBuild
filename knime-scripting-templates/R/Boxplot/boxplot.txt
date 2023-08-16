@@ -149,7 +149,7 @@ keepColumns <- measurements
 multiXFactor <- FALSE
 # xFactor should never be NULL
 if("-USE COLUMN SELECTION-" %in% xFactor) {
-  xFactor <- measurements
+  xFactor <- "variable"
 } else {
   keepColumns <- c(keepColumns, xFactor)
   if(length(xFactor) >= 2) multiXFactor <- TRUE
@@ -200,6 +200,24 @@ if(multiColorBy) {
 
 data <- subdata %>% pivot_longer(all_of(measurements), names_to = "variable", values_to = "value")
 
+# axis titles and orientation
+if(is.na(xAxisTitle)) {
+  xAxisTitle <- xFactor
+}
+if(is.na(yAxisTitle)) {
+  # if multiple parameters have been selected use a fixed y-axis title else take the measurement name
+  if(length(measurements) > 1) yAxisTitle <- "measurement values" else yAxisTitle <- measurements[1]
+}
+gg_xAxisTitle <- waiver()
+gg_yAxisTitle <- waiver()
+if(!flipCoords) {
+  gg_xAxisTitle <- xAxisTitle 
+  gg_yAxisTitle <- yAxisTitle
+} else {
+  gg_xAxisTitle <- yAxisTitle 
+  gg_yAxisTitle <- xAxisTitle
+}
+
 p <- ggplot(data, aes(x = get(xFactor), y = value)) + geom_boxplot(notch = showNotches, outlier.shape = outlierShape)
 if(!is.null(colorBy))
   p <- p + aes(fill = get(colorBy))
@@ -213,6 +231,7 @@ if(showDatapoints) {
 if(!is.null(facetBy)) p <- p + facet_wrap( ~ get(facetBy), scales = gg_scales, nrow = gg_facetRows, ncol = gg_facetColumns)
 if(yScales == "custom") p <- p + coord_cartesian(ylim = gg_ylims)
 if(flipCoords) p <- p + coord_flip(ylim = gg_ylims)
+p <- p + guides(x = guide_axis(title = gg_xAxisTitle), y = guide_axis(title = gg_yAxisTitle))
 
 print(p)
 
