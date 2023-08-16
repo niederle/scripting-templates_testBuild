@@ -152,6 +152,12 @@ if(!is.na(as.numeric(baseSize))) gg_baseSize <- as.numeric(baseSize) else stop("
 gg_title <- waiver()
 if(!is.na(plotTitle)) gg_title <- plotTitle
 
+gg_legendPosition <- legendPosition
+if(legendPosition == "custom position") {
+  if(!any(is.na(as.numeric(legendCoordinates)))) gg_legendPosition <- as.numeric(legendCoordinates)
+  else stop("Error: Template initialization fails - custom legend position do require numerical values")
+}
+
 # check use of flowvars for measurements
 if(useFlowVarForXFactor) xFactor <- flowVarForXFactor
 if(useFlowVarForGrid) facetBy <- flowVarForGrid
@@ -224,6 +230,8 @@ if(multiColorBy) {
 }
 
 data <- subdata %>% pivot_longer(all_of(measurements), names_to = "variable", values_to = "value")
+#fix integer columns
+data <- data %>% mutate(across(c(where(is.integer),!value), as.character))
 
 # axis titles and orientation
 if(is.na(xAxisTitle)) {
@@ -241,6 +249,13 @@ if(!flipCoords) {
 } else {
   gg_xAxisTitle <- yAxisTitle 
   gg_yAxisTitle <- xAxisTitle
+}
+
+gg_legendTitle <- waiver()
+if(!is.na(legendTitle)) {
+  gg_legendTitle <- legendTitle
+} else {
+  gg_legendTitle <- colorBy
 }
 
 p <- ggplot(data, aes(x = get(xFactor), y = value)) + geom_boxplot(notch = showNotches, outlier.shape = outlierShape)
@@ -264,7 +279,9 @@ if(plotTheme == "minimal") p <- p + theme_minimal(base_size = gg_baseSize)
 
 if(flipCoords) p <- p + coord_flip(ylim = gg_ylims) else p <- p + coord_cartesian(ylim = gg_ylims)
 p <- p + guides(x = guide_axis(title = gg_xAxisTitle, angle = gg_xAxisAngle), y = guide_axis(title = gg_yAxisTitle, angle = gg_yAxisAngle))
+p <- p + guides(fill = guide_legend(title = gg_legendTitle))
 p <- p + labs(title = gg_title)
+p <- p + theme(legend.position = gg_legendPosition)
 
 print(p)
 
