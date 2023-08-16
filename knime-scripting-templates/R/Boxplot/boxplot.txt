@@ -125,12 +125,12 @@ gg_facetColumns <- NULL
 if(gridRows != "-AUTO-") {
   gg_facetRows <- as.numeric(gridRows)
   if(any(is.na(gg_facetRows)))
-    stop("Error: Template initialization fails - number of 2D grid rows do require a numerical value")
+    stop("Error: Template initialization fails - number of 2D grid rows does require a numerical value")
 }
 if(gridColumns != "-AUTO-") {
   gg_facetColumns <- as.numeric(gridColumns)
   if(any(is.na(gg_facetColumns)))
-    stop("Error: Template initialization fails - number of 2D grid rows do require a numerical value")
+    stop("Error: Template initialization fails - number of 2D grid rows does require a numerical value")
 }
 
 gg_xAxisAngle <- NULL
@@ -138,7 +138,7 @@ gg_yAxisAngle <- NULL
 if(flipCoords) gg_yAxisAngle <- as.numeric(xAxisOrientation) else gg_xAxisAngle <- as.numeric(xAxisOrientation)
 
 gg_baseSize <- 14
-if(!is.na(as.numeric(baseSize))) gg_baseSize <- as.numeric(baseSize)
+if(!is.na(as.numeric(baseSize))) gg_baseSize <- as.numeric(baseSize) else stop("Error: Template initialization fails - plot base size does require a numerical value")
 
 # check use of flowvars for measurements
 if(useFlowVarForXFactor) xFactor <- flowVarForXFactor
