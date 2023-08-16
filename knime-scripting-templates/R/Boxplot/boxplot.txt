@@ -16,7 +16,7 @@ Boxplot template
 <labelarea span="full">Boxplot template</labelarea>
 <gaprow height="1"/>
 
-<separator label="Options" span="full"/>
+<separator label="Data Options" span="full"/>
 <gaprow height="2"/>
 
 # 1. Parameter selection
@@ -45,6 +45,10 @@ xFactor = c(<listbox label="x-axis" items="-USE COLUMN SELECTION-,$$$STR_ATTRIBU
 facetBy = c(<listbox label="2D grid grouping parameters" items="-NO SELECTION-,-USE COLUMN SELECTION-,$$$STR_ATTRIBUTES$$$"/>)
 <checkbox label="use flow variable (grid)" var="useFlowVarForGrid" selected="false" />
 <textfield label="flow variable (grid)" var="flowVarForGrid" data-type="text" default-value= "" size="10" />
+<vbox>
+<vector  var="gridRows" label="2D grid [rows]" size="1" default-value="-AUTO-"/>
+<vector  var="gridColumns" label="2D grid [columns]" size="1" default-value="-AUTO-"/>
+</vbox>
 </hbox>
 
 <separator label="" span="full"/>
@@ -87,7 +91,7 @@ library(dplyr)
 library(tidyr)
 
 # yScales can be "free_y", "fixed", "custom"
-gg_scales = yScales
+gg_scales <- yScales
 gg_ylims <- NULL
 if(yScales == "custom") {
   gg_ylims <- as.numeric(ylims)
@@ -97,6 +101,21 @@ if(yScales == "custom") {
     stop("Error: Template initialization fails - custom y-limits min has to be smaller than max") 
   gg_scales = "fixed"
 }
+
+# 2D grid rows/columns, default = -AUTO-
+gg_facetRows <- NULL
+gg_facetColumns <- NULL
+if(gridRows != "-AUTO-") {
+  gg_facetRows <- as.numeric(gridRows)
+  if(any(is.na(gg_facetRows)))
+    stop("Error: Template initialization fails - number of 2D grid rows do require a numerical value")
+}
+if(gridColumns != "-AUTO-") {
+  gg_facetColumns <- as.numeric(gridColumns)
+  if(any(is.na(gg_facetColumns)))
+    stop("Error: Template initialization fails - number of 2D grid rows do require a numerical value")
+}
+
 
 #TODO: check use of flowvars for measurements
 if(useFlowVarForXFactor) xFactor <- flowVarForXFactor
@@ -181,7 +200,7 @@ if(showDatapoints) {
 }
 
 
-if(!is.null(facetBy)) p <- p + facet_wrap( ~ get(facetBy), scales = gg_scales)
+if(!is.null(facetBy)) p <- p + facet_wrap( ~ get(facetBy), scales = gg_scales, nrow = gg_facetRows, ncol = gg_facetColumns)
 if(yScales == "custom") p <- p + coord_cartesian(ylim = gg_ylims)
 if(flipCoords) p <- p + coord_flip(ylim = gg_ylims)
 
