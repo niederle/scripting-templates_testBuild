@@ -126,6 +126,10 @@ if(gridColumns != "-AUTO-") {
     stop("Error: Template initialization fails - number of 2D grid rows do require a numerical value")
 }
 
+gg_xAxisAngle <- NULL
+gg_yAxisAngle <- NULL
+if(flipCoords) gg_yAxisAngle <- as.numeric(xAxisOrientation) else gg_xAxisAngle <- as.numeric(xAxisOrientation)
+
 
 #TODO: check use of flowvars for measurements
 if(useFlowVarForXFactor) xFactor <- flowVarForXFactor
@@ -230,7 +234,7 @@ if(showDatapoints) {
 
 if(!is.null(facetBy)) p <- p + facet_wrap( ~ get(facetBy), scales = gg_scales, nrow = gg_facetRows, ncol = gg_facetColumns)
 if(flipCoords) p <- p + coord_flip(ylim = gg_ylims) else p <- p + coord_cartesian(ylim = gg_ylims)
-p <- p + guides(x = guide_axis(title = gg_xAxisTitle), y = guide_axis(title = gg_yAxisTitle))
+p <- p + guides(x = guide_axis(title = gg_xAxisTitle, angle = gg_xAxisAngle), y = guide_axis(title = gg_yAxisTitle, angle = gg_yAxisAngle))
 
 print(p)
 
