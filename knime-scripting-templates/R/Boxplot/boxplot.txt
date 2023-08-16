@@ -91,6 +91,13 @@ jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" defa
 <combobox var="xAxisOrientation" items="0,45,90" label="angle of x-axis"/>
 </hbox>
 
+<separator label="General Layout Options" span="full"/>
+
+<hbox>
+<combobox var="plotTheme" items="black-white,grey,linedraw,light,classic,minimal" label="plot theme"/>
+<vector  var="baseSize" label="base font size" size="1" default-value="18"/>
+</hbox>
+
 </group>
 
 # 2. r-code
@@ -130,8 +137,10 @@ gg_xAxisAngle <- NULL
 gg_yAxisAngle <- NULL
 if(flipCoords) gg_yAxisAngle <- as.numeric(xAxisOrientation) else gg_xAxisAngle <- as.numeric(xAxisOrientation)
 
+gg_baseSize <- 14
+if(!is.na(as.numeric(baseSize))) gg_baseSize <- as.numeric(baseSize)
 
-#TODO: check use of flowvars for measurements
+# check use of flowvars for measurements
 if(useFlowVarForXFactor) xFactor <- flowVarForXFactor
 if(useFlowVarForGrid) facetBy <- flowVarForGrid
 if(useFlowVarForColor) colorBy <- flowVarForColor
@@ -233,6 +242,14 @@ if(showDatapoints) {
 
 
 if(!is.null(facetBy)) p <- p + facet_wrap( ~ get(facetBy), scales = gg_scales, nrow = gg_facetRows, ncol = gg_facetColumns)
+
+if(plotTheme == "black-white") p <- p + theme_bw(base_size = gg_baseSize)
+if(plotTheme == "grey") p <- p + theme_grey(base_size = gg_baseSize)
+if(plotTheme == "linedraw") p <- p + theme_linedraw(base_size = gg_baseSize)
+if(plotTheme == "light") p <- p + theme_light(base_size = gg_baseSize)
+if(plotTheme == "classic") p <- p + theme_classic(base_size = gg_baseSize)
+if(plotTheme == "minimal") p <- p + theme_minimal(base_size = gg_baseSize)
+
 if(flipCoords) p <- p + coord_flip(ylim = gg_ylims) else p <- p + coord_cartesian(ylim = gg_ylims)
 p <- p + guides(x = guide_axis(title = gg_xAxisTitle, angle = gg_xAxisAngle), y = guide_axis(title = gg_yAxisTitle, angle = gg_yAxisAngle))
 
