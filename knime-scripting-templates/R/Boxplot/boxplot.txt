@@ -71,7 +71,7 @@ colorBy = c(<listbox label="colored by" items="-NO SELECTION-,-USE COLUMN SELECT
 jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" default-value="0.25"/>))
 </hbox>
 
-<separator label="Coordinate Options" span="full"/>
+<separator label="Layout Options - Coordinate System" span="full"/>
 
 <vbox>
 <hbox>
@@ -81,7 +81,7 @@ jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" defa
 <checkbox label="flip x/y coordinates" var="flipCoords" selected="false" />
 </vbox>
 
-<separator label="Axis Options" span="full"/>
+<separator label="Layout Options - Axes" span="full"/>
 
 <hbox>
 <vbox>
@@ -91,12 +91,20 @@ jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" defa
 <combobox var="xAxisOrientation" items="0,45,90" label="angle of x-axis"/>
 </hbox>
 
-<separator label="General Layout Options" span="full"/>
+<separator label="Layout Options - General" span="full"/>
 
 <textfield label="plot title" var="plotTitle" data-type="text" default-value= "" size="10" />
 <hbox>
 <combobox var="plotTheme" items="black-white,grey,linedraw,light,classic,minimal" label="plot theme"/>
 <vector  var="baseSize" label="base font size" size="1" default-value="18"/>
+</hbox>
+
+<separator label="Layout Options - Legend" span="full"/>
+
+<textfield label="legend title" var="legendTitle" data-type="text" default-value= "" size="10" />
+<hbox>
+<combobox var="legendPosition" items="right,left,bottom,top,none,custom position" label="legend position"/>
+<vector  var="legendCoordinates" label="custom legend coordinates [x,y]" size="2" default-value=""/>
 </hbox>
 
 </group>
