@@ -71,24 +71,30 @@ colorBy = c(<listbox label="colored by" items="-NO SELECTION-,-USE COLUMN SELECT
 jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" default-value="0.25"/>))
 </hbox>
 
-<separator label="Layout Options - Coordinate System" span="full"/>
+<separator label="Layout Options - Coordinate System (unflipped)" span="full"/>
 
 <vbox>
 <hbox>
 <combobox var="yScales" items="free_y,fixed,custom" label="select mode for y-scales"/>
 <vector  var="ylims" label="custom y-scales [ymin,ymax]" size="2" default-value=""/>
 </hbox>
+<hbox>
+<checkbox label="log10 y-transformation" var="useLog10" selected="false" />
 <checkbox label="flip x/y coordinates" var="flipCoords" selected="false" />
+</hbox>
 </vbox>
 
-<separator label="Layout Options - Axes" span="full"/>
+<separator label="Layout Options - Axes (unflipped)" span="full"/>
 
 <hbox>
 <vbox>
 <textfield label="x-Axis title" var="xAxisTitle" data-type="text" default-value= "" size="10" />
 <textfield label="y-axis title" var="yAxisTitle" data-type="text" default-value= "" size="10" />
 </vbox>
+<vbox>
 <combobox var="xAxisOrientation" items="0,45,90" label="angle of x-axis"/>
+<combobox var="yAxisOrientation" items="0,45,90" label="angle of y-axis"/>
+</vbox>
 </hbox>
 
 <separator label="Layout Options - General" span="full"/>
@@ -127,6 +133,9 @@ if(yScales == "custom") {
     stop("Error: Template initialization fails - custom y-limits min has to be smaller than max") 
   gg_scales = "fixed"
 }
+if(yScales == "free_y" && flipCoords) {
+  gg_scales = "free_x"
+}
 
 # 2D grid rows/columns, default = -AUTO-
 gg_facetRows <- NULL
@@ -144,7 +153,13 @@ if(gridColumns != "-AUTO-") {
 
 gg_xAxisAngle <- NULL
 gg_yAxisAngle <- NULL
-if(flipCoords) gg_yAxisAngle <- as.numeric(xAxisOrientation) else gg_xAxisAngle <- as.numeric(xAxisOrientation)
+if(flipCoords) {
+  gg_xAxisAngle <- 90 - as.numeric(yAxisOrientation) 
+  gg_yAxisAngle <- 90 - as.numeric(xAxisOrientation) 
+} else {
+  gg_xAxisAngle <- as.numeric(xAxisOrientation)
+  gg_yAxisAngle <- as.numeric(yAxisOrientation) 
+}
 
 gg_baseSize <- 14
 if(!is.na(as.numeric(baseSize))) gg_baseSize <- as.numeric(baseSize) else stop("Error: Template initialization fails - plot base size does require a numerical value")
@@ -277,6 +292,7 @@ if(plotTheme == "light") p <- p + theme_light(base_size = gg_baseSize)
 if(plotTheme == "classic") p <- p + theme_classic(base_size = gg_baseSize)
 if(plotTheme == "minimal") p <- p + theme_minimal(base_size = gg_baseSize)
 
+if(useLog10) p <- p + scale_y_log10()
 if(flipCoords) p <- p + coord_flip(ylim = gg_ylims) else p <- p + coord_cartesian(ylim = gg_ylims)
 p <- p + guides(x = guide_axis(title = gg_xAxisTitle, angle = gg_xAxisAngle), y = guide_axis(title = gg_yAxisTitle, angle = gg_yAxisAngle))
 p <- p + guides(fill = guide_legend(title = gg_legendTitle))
