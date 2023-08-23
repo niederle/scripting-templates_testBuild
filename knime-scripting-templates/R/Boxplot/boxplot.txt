@@ -247,6 +247,10 @@ if(multiColorBy) {
 data <- subdata %>% pivot_longer(all_of(measurements), names_to = "variable", values_to = "value")
 #fix integer columns
 data <- data %>% mutate(across(c(where(is.integer),!value), as.character))
+# create column for grouping data
+groupByCols <- c(xFactor)
+if(!is.null(colorBy)) groupByCols[2] <- colorBy
+data <- data %>% group_by(across(all_of(groupByCols))) %>% mutate(gg_groupID = cur_group_id())
 
 # axis titles and orientation
 if(is.na(xAxisTitle)) {
@@ -273,7 +277,7 @@ if(!is.na(legendTitle)) {
   gg_legendTitle <- colorBy
 }
 
-p <- ggplot(data, aes(x = get(xFactor), y = value)) + geom_boxplot(notch = showNotches, outlier.shape = outlierShape)
+p <- ggplot(data, aes(x = get(xFactor), y = value, group = gg_groupID)) + geom_boxplot(notch = showNotches, outlier.shape = outlierShape)
 if(!is.null(colorBy))
   p <- p + aes(fill = get(colorBy))
 
