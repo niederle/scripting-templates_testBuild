@@ -301,13 +301,13 @@ if(!is.na(legendTitle)) {
 # ---------------------------------------------------------------------------------------------------
 # plot data
 p <- ggplot(data, aes(x = get(xFactor), y = value, group = gg_groupID)) + geom_boxplot(notch = showNotches, outlier.shape = outlierShape)
-
 if(!is.null(colorBy)) {
   p <- p + aes(fill = get(colorBy))
   if(isColorDiscrete) {
     gg_colorLevels <- levels(data %>% group_by(get(colorBy)) %>% summarise() %>% pull())
     if(useKNIMEColors) {
-      #p <- p + scale_fill_manual(values = c("red","green","blue","yellow","pink","black"), breaks = c("8","4","3","1","2","6"))
+      gg_colors <- kIn.color.model %>% arrange(match(get(colorBy), gg_colorLevels)) %>% pull(color)
+      p <- p + scale_fill_manual(values = gg_colors, breaks = gg_colorLevels)
     } else {
       if(gg_colorPalette == 1) {
         p <- p + scale_fill_hue(breaks = gg_colorLevels,  breaks = gg_colorLevels)
@@ -323,6 +323,7 @@ if(!is.null(colorBy)) {
     p <- p + scale_fill_distiller(palette = gg_colorPalette, direction = 1)
   }
 }
+
 
 if(showDatapoints) {
   if(!is.null(colorBy)) p <- p + geom_point(position = position_jitterdodge(jitter.width = jitterWidth), shape=21)
