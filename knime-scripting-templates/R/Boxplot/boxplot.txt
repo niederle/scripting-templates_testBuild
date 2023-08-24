@@ -310,7 +310,7 @@ if(!is.null(colorBy)) {
       p <- p + scale_fill_manual(values = gg_colors, breaks = gg_colorLevels)
     } else {
       if(gg_colorPalette == 1) {
-        p <- p + scale_fill_hue(breaks = gg_colorLevels,  breaks = gg_colorLevels)
+        p <- p + scale_fill_hue(breaks = gg_colorLevels)
       } else {
         p <- p + scale_fill_brewer(palette = gg_colorPalette, breaks = gg_colorLevels)
       }
