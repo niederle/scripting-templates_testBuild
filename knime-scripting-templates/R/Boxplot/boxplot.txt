@@ -224,6 +224,9 @@ if(!is.null(colorBy) && colorPalette == "KNIME colors") {
     stop("Error: Template initialization fails - KNIME colors are not set for selected color column.")
 }
 
+gg_colorPalette <- colorPalette
+if(colorPalette == "ggplot default") gg_colorPalette <- 1
+
 # if outliers should be displayed, set outlier shape to NULL (default)
 outlierShape <- NA
 if(showOutliers)
@@ -304,13 +307,13 @@ if(!is.null(colorBy)) {
     if(useKNIMEColors) {
       #p <- p + scale_fill_manual(values = c("red","green","blue","yellow","pink","black"), breaks = c("8","4","3","1","2","6"))
     } else {
-      p <- p + scale_fill_brewer(palette = colorPalette)
+      p <- p + scale_fill_brewer(palette = gg_colorPalette)
     }
   } else { #continuous scale
     if(useKNIMEColors) {
       p <- p + scale_fill_gradientn(colors = kIn.color.model$color, limits = kIn.color.model[[colorBy]])
     } else {
-      p <- p + scale_fill_distiller(palette = colorPalette, direction = 1)
+      p <- p + scale_fill_distiller(palette = gg_colorPalette, direction = 1)
     }
   }
 }
