@@ -304,10 +304,15 @@ p <- ggplot(data, aes(x = get(xFactor), y = value, group = gg_groupID)) + geom_b
 if(!is.null(colorBy)) {
   p <- p + aes(fill = get(colorBy))
   if(isColorDiscrete) {
+    gg_colorLevels <- levels(data %>% group_by(get(colorBy)) %>% summarise() %>% pull())
     if(useKNIMEColors) {
       #p <- p + scale_fill_manual(values = c("red","green","blue","yellow","pink","black"), breaks = c("8","4","3","1","2","6"))
     } else {
-      p <- p + scale_fill_brewer(palette = gg_colorPalette)
+      if(gg_colorPalette == 1) {
+        p <- p + scale_fill_hue(breaks = gg_colorLevels)
+      } else {}
+        p <- p + scale_fill_brewer(palette = gg_colorPalette, breaks = gg_colorLevels)
+    }
     }
   } else { #continuous scale
     if(useKNIMEColors) {
