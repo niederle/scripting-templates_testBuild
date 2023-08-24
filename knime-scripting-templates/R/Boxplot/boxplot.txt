@@ -122,6 +122,50 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 
+# check use of flowvars for measurements
+if(useFlowVarForXFactor) xFactor <- flowVarForXFactor
+if(useFlowVarForGrid) facetBy <- flowVarForGrid
+if(useFlowVarForColor) colorBy <- flowVarForColor
+
+# no measurement and/or factor column(s) selected
+if(is.null(measurements)) stop("Error: Template initialization fails - no column(s) for bar height selected") 
+if(is.null(xFactor)) stop("Error: Template initialization fails - no column(s) for x-axis selected") 
+
+keepColumns <- measurements
+
+multiXFactor <- FALSE
+# xFactor should never be NULL
+if("-USE COLUMN SELECTION-" %in% xFactor) {
+  xFactor <- "variable"
+} else {
+  keepColumns <- c(keepColumns, xFactor)
+  if(length(xFactor) >= 2) multiXFactor <- TRUE
+}
+
+multiFacetBy <- FALSE
+if("-NO SELECTION-" %in% facetBy)
+  facetBy = NULL
+if("-USE COLUMN SELECTION-" %in% facetBy) {
+  facetBy <- "variable"
+} else {
+  if(!is.null(facetBy)) {
+    keepColumns <- c(keepColumns, facetBy)
+    if(length(facetBy) >= 2) multiFacetBy <- TRUE
+  }
+}
+
+multiColorBy <- FALSE
+if("-NO SELECTION-" %in% colorBy)
+  colorBy = NULL
+if("-USE COLUMN SELECTION-" %in% colorBy) {
+  colorBy <- "variable"
+} else {
+  if(!is.null(colorBy)) {
+    keepColumns <- c(keepColumns, colorBy)
+    if(length(colorBy) >= 2) multiColorBy <- TRUE
+  }
+}
+
 # yScales can be "free_y", "fixed", "custom"
 gg_scales <- yScales
 gg_ylims <- NULL
@@ -180,15 +224,6 @@ if(!is.null(colorBy) && colorPalette == "KNIME colors") {
     stop("Error: Template initialization fails - KNIME colors are not set for selected color column.")
 }
 
-# check use of flowvars for measurements
-if(useFlowVarForXFactor) xFactor <- flowVarForXFactor
-if(useFlowVarForGrid) facetBy <- flowVarForGrid
-if(useFlowVarForColor) colorBy <- flowVarForColor
-
-# no measurement and/or factor column(s) selected
-if(is.null(measurements)) stop("Error: Template initialization fails - no column(s) for bar height selected") 
-if(is.null(xFactor)) stop("Error: Template initialization fails - no column(s) for x-axis selected") 
-
 # if outliers should be displayed, set outlier shape to NULL (default)
 outlierShape <- NA
 if(showOutliers)
@@ -196,41 +231,6 @@ if(showOutliers)
 # if datapoints should be displayed too, hide outliers with outlier shape = NA
 if(showDatapoints)
   outlierShape <- NA
-
-keepColumns <- measurements
-
-multiXFactor <- FALSE
-# xFactor should never be NULL
-if("-USE COLUMN SELECTION-" %in% xFactor) {
-  xFactor <- "variable"
-} else {
-  keepColumns <- c(keepColumns, xFactor)
-  if(length(xFactor) >= 2) multiXFactor <- TRUE
-}
-
-multiFacetBy <- FALSE
-if("-NO SELECTION-" %in% facetBy)
-  facetBy = NULL
-if("-USE COLUMN SELECTION-" %in% facetBy) {
-  facetBy <- "variable"
-} else {
-  if(!is.null(facetBy)) {
-    keepColumns <- c(keepColumns, facetBy)
-    if(length(facetBy) >= 2) multiFacetBy <- TRUE
-  }
-}
-
-multiColorBy <- FALSE
-if("-NO SELECTION-" %in% colorBy)
-  colorBy = NULL
-if("-USE COLUMN SELECTION-" %in% colorBy) {
-  colorBy <- "variable"
-} else {
-  if(!is.null(colorBy)) {
-    keepColumns <- c(keepColumns, colorBy)
-    if(length(colorBy) >= 2) multiColorBy <- TRUE
-  }
-}
 
 keepColumns <- unique(keepColumns)
 subdata <- kIn %>% select(all_of(keepColumns))
