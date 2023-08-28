@@ -117,6 +117,16 @@ jitterWidth = as.numeric(c(<vector label="jitter width [points]" size="1" defaul
 <vector  var="legendCoordinates" label="custom legend x/y coordinates [0;1]" size="2" default-value=""/>
 </hbox>
 
+
+<separator label="Layout Options - Font sizes (relative to base size, unflipped)" span="full"/>
+<hbox>
+<vector  var="titleSize" label="font-size [title]" size="1" default-value="1.2"/>
+<vector  var="legendSize" label="font-size [legent title / text]" size="2" default-value="1,0.8"/>
+</hbox>
+<vector  var="xAxisSize" label="font-size [x-axis title / text]" size="2" default-value="1,0.8"/>
+<vector  var="yAxisSize" label="font-size [y-axis title / text]" size="2" default-value="1,0.8"/>
+
+
 </group>
 
 # 2. r-code
@@ -228,6 +238,20 @@ gg_legendPosition <- legendPosition
 if(legendPosition == "custom position") {
   if(!any(is.na(as.numeric(legendCoordinates)))) gg_legendPosition <- as.numeric(legendCoordinates)
   else stop("Error: Template initialization fails - custom legend position do require numerical values")
+}
+
+gg_titleSize <- as.numeric(titleSize)
+if(is.na(gg_titleSize)) stop("Error: Template initialization fails - plot title size does require a numerical value")
+gg_legendSize <- as.numeric(legendSize)
+if(any(is.na(gg_legendSize))) stop("Error: Template initialization fails - plot legend sizes do require numerical values")
+gg_xAxisSize <- as.numeric(xAxisSize)
+if(any(is.na(gg_xAxisSize))) stop("Error: Template initialization fails - plot x-axis sizes do require numerical values")
+gg_yAxisSize <- as.numeric(yAxisSize)
+if(any(is.na(gg_yAxisSize))) stop("Error: Template initialization fails - plot y-axis sizes do require numerical values")
+if(flipCoords) {
+  temp <- gg_xAxisSize
+  gg_xAxisSize <- gg_yAxisSize
+  gg_yAxisSize <- temp
 }
 
 if(!is.null(colorBy) && colorPalette == "KNIME colors") {
@@ -357,6 +381,14 @@ if(flipCoords) p <- p + coord_flip(ylim = gg_ylims) else p <- p + coord_cartesia
 p <- p + guides(x = guide_axis(title = gg_xAxisTitle, angle = gg_xAxisAngle), y = guide_axis(title = gg_yAxisTitle, angle = gg_yAxisAngle))
 p <- p + labs(title = gg_title, fill = gg_legendTitle)
 p <- p + theme(legend.position = gg_legendPosition)
+
+p <- p + theme(plot.title = element_text(size=rel(gg_titleSize)),
+               legend.title = element_text(size = rel(gg_legendSize[1])),
+               legend.text = element_text(size = rel(gg_legendSize[2])),
+               axis.title.x = element_text(size = rel(gg_xAxisSize[1])),
+               axis.text.x = element_text(size = rel(gg_xAxisSize[2])),
+               axis.title.y = element_text(size = rel(gg_yAxisSize[1])),
+               axis.text.y = element_text(size = rel(gg_yAxisSize[2])))
 
 print(p)
 
