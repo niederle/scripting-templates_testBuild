@@ -341,6 +341,7 @@ if(!is.na(legendTitle)) {
 # ---------------------------------------------------------------------------------------------------
 # plot data
 p <- ggplot(data, aes(x = get(xFactor), y = value, group = gg_groupID)) + geom_boxplot(notch = showNotches, outlier.shape = outlierShape)
+
 if(!is.null(colorBy)) {
   p <- p + aes(fill = get(colorBy))
   if(isColorDiscrete) {
@@ -355,12 +356,12 @@ if(!is.null(colorBy)) {
         p <- p + scale_fill_brewer(palette = gg_colorPalette, breaks = gg_colorLevels)
       }
     }
-  }
-} else { #continuous scale
-  if(useKNIMEColors) {
-    p <- p + scale_fill_gradientn(colors = kIn.color.model$color, limits = kIn.color.model[[colorBy]])
-  } else {
-    p <- p + scale_fill_distiller(palette = gg_colorPalette, direction = 1)
+  } else { #continuous scale
+    if(useKNIMEColors) {
+      p <- p + scale_fill_gradientn(colors = kIn.color.model$color, limits = kIn.color.model[[colorBy]])
+    } else {
+      p <- p + scale_fill_distiller(palette = gg_colorPalette, direction = 1)
+    }
   }
 }
 
