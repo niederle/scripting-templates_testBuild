@@ -345,7 +345,8 @@ p <- ggplot(data, aes(x = get(xFactor), y = value, group = gg_groupID)) + geom_b
 if(!is.null(colorBy)) {
   p <- p + aes(fill = get(colorBy))
   if(isColorDiscrete) {
-    gg_colorLevels <- levels(data %>% group_by(get(colorBy)) %>% summarise() %>% pull())
+    gg_colorLevels <- data %>% group_by(get(colorBy)) %>% summarise() %>% pull()
+    if(is.factor(gg_colorLevels)) gg_colorLevels <- levels(gg_colorLevels)
     if(useKNIMEColors) {
       gg_colors <- kIn.color.model %>% arrange(match(get(colorBy), gg_colorLevels)) %>% pull(color)
       p <- p + scale_fill_manual(values = gg_colors, breaks = gg_colorLevels)
