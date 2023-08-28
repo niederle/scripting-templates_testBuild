@@ -68,7 +68,11 @@ colorBy = c(<listbox label="colored by" items="-NO SELECTION-,-USE COLUMN SELECT
 </hbox>
 <hbox>
 <checkbox label="show single datapoints" var="showDatapoints" selected="false" />
-jitterWidth = as.numeric(c(<vector label="jitter width of points:" size="1" default-value="0.25"/>))
+</hbox>
+<hbox>
+jitterWidth = as.numeric(c(<vector label="jitter width [points]" size="1" default-value="0.25"/>))
+<vector  var="pointSize" label="size [points]" size="1" default-value="3"/>
+<vector  var="pointAlpha" label="alpha value [points]" size="1" default-value="0.7"/>
 </hbox>
 
 <separator label="Layout Options - Coordinate System (unflipped)" span="full"/>
@@ -193,6 +197,15 @@ if(gridColumns != "-AUTO-") {
   gg_facetColumns <- as.numeric(gridColumns)
   if(any(is.na(gg_facetColumns)))
     stop("Error: Template initialization fails - number of 2D grid rows does require a numerical value")
+}
+
+gg_pointSize <- as.numeric(pointSize)
+if(is.na(gg_pointSize)) {
+  stop("Error: Template initialization fails - point size does require a numerical value")
+}
+gg_pointAlpha <- as.numeric(pointAlpha)
+if(is.na(gg_pointAlpha)) {
+  stop("Error: Template initialization fails - alpha value [points] does require a numerical value")
 }
 
 gg_xAxisAngle <- NULL
@@ -326,8 +339,8 @@ if(!is.null(colorBy)) {
 
 
 if(showDatapoints) {
-  if(!is.null(colorBy)) p <- p + geom_point(position = position_jitterdodge(jitter.width = jitterWidth), shape=21)
-  else p <- p + geom_point(position = position_jitter(width = jitterWidth), shape=21)
+  if(!is.null(colorBy)) p <- p + geom_point(position = position_jitterdodge(jitter.width = jitterWidth), shape=21, size = gg_pointSize, alpha = gg_pointAlpha)
+  else p <- p + geom_point(position = position_jitter(width = jitterWidth), shape=21, size = gg_pointSize, alpha = gg_pointAlpha)
 }
 
 if(!is.null(facetBy)) p <- p + facet_wrap( ~ get(facetBy), scales = gg_scales, nrow = gg_facetRows, ncol = gg_facetColumns)
