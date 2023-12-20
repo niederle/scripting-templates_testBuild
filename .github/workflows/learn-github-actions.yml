@@ -1,17 +1,19 @@
-name: create_release
+name: publish_changes
 run-name: Build template file and publish as release
 on:
   push:
     branches:
       - 'master'
 jobs:
-  check-bats-version:
+  create_release:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
-      - name: List files
-        run: set
+      - name: Copy template file
+        run: cp knime-scripting-templates/R/figure-templates.txt $RUNNER_HOME
+      - name: confirm
+        run: ls $RUNNER_HOME
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
