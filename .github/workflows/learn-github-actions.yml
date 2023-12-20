@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
+      - name: show environment variables
+        run: set
       - name: Copy template file
         run: cp knime-scripting-templates/R/figure-templates.txt $RUNNER_HOME
       - name: confirm
