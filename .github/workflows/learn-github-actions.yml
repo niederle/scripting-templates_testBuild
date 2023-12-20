@@ -1,5 +1,5 @@
-name: learn-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
+name: create_release
+run-name: Build template file and publish as release
 on:
   push:
     branches:
