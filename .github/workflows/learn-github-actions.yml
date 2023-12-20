@@ -13,9 +13,9 @@ jobs:
       - name: show environment variables
         run: set
       - name: Copy template file
-        run: cp knime-scripting-templates/R/figure-templates.txt $RUNNER_HOME
+        run: cp knime-scripting-templates/R/figure-templates.txt $RUNNER_WORKSPACE
       - name: confirm
-        run: ls $RUNNER_HOME
+        run: ls $RUNNER_WORKSPACE
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
