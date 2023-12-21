@@ -31,6 +31,10 @@ TAG_REPO="# github_repository: $REPO"
 TAG_RELEASE="# github_release: $RELEASE"
 TAG_COMMIT="# github_sha: $COMMIT"
 
+echo $TAG_REPO
+echo $TAG_RELEASE
+echo $TAG_COMMIT
+
 echo "Build template file from $SOURCE_FOLDER"
 
 TEMPLATE_FILES=`find $SOURCE_FOLDER -name *.txt -type f`
