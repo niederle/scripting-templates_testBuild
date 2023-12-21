@@ -19,7 +19,7 @@ jobs:
           echo $GITHUB_WORKFLOW_SHA
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "${{ runner.workspace }}/../figure-templates.txt"
+          artifacts: "${{ runner.workspace }}/figure-templates.txt"
           commit: master
           tag: "test_tag"
       
