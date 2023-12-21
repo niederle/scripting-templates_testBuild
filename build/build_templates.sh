@@ -23,9 +23,9 @@ SEARCH_PATTERN="# name: .*"
 # for testing only
 #TAG_REPO="# repository: scriptingRepo"
 #TAG_RELEASE="# release: releaseTag"
-REPO=${{ github.server_url }}/${{ github.repository }}
+REPO=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY
 RELEASE="test_build"
-COMMIT=${{ github.sha }}
+COMMIT=$GITHUB_SHA
 
 TAG_REPO="# github_repository: $REPO"
 TAG_RELEASE="# github_release: $RELEASE"
