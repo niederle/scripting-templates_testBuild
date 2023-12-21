@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
-      - name: show environment variables
-        run: set
       - name: Copy template file and print commit
         run: |
           cp knime-scripting-templates/R/figure-templates.txt $RUNNER_WORKSPACE
@@ -21,7 +19,7 @@ jobs:
           echo $GITHUB_WORKFLOW_SHA
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "figure-templates.txt"
+          artifacts: "$RUNNER_WORKSPACE/figure-templates.txt"
           commit: master
           tag: "test_tag"
       
