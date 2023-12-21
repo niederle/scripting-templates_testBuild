@@ -7,6 +7,8 @@ on:
 jobs:
   create_release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
@@ -17,8 +19,9 @@ jobs:
           cp knime-scripting-templates/R/figure-templates.txt $RUNNER_WORKSPACE
           ls $RUNNER_WORKSPACE
           echo $GITHUB_WORKFLOW_SHA
-      - uses: actions/setup-node@v3
+      - uses: ncipollo/release-action@v1
         with:
-          node-version: '14'
-      - run: npm install -g bats
-      - run: bats -v
+          artifacts: "figure-templates.txt"
+          commit: $GITHUB_WORKFLOW_SHA
+          name: "My first release"
+      
