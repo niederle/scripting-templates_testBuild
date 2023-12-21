@@ -47,7 +47,7 @@ echo $DEST_FILE
 
 for file in $TEMPLATE_FILES; do
 	echo "Processing template $file"
-	sed "s/$SEARCH_PATTERN/&\n$TAG_REPO\n$TAG_RELEASE\n$TAG_COMMIT/" $file >> $DEST_FILE
+	sed "s|$SEARCH_PATTERN|&\n$TAG_REPO\n$TAG_RELEASE\n$TAG_COMMIT|" $file >> $DEST_FILE
 	echo "" >> $DEST_FILE
 	echo "" >> $DEST_FILE
 done
