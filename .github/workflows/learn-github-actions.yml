@@ -22,6 +22,6 @@ jobs:
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "figure-templates.txt"
-          commit: $GITHUB_WORKFLOW_SHA
+          commit: master
           tag: "test_tag"
       
