@@ -2,7 +2,7 @@
 # name: Boxplot 
 # author: Antje Janosch
 # category: basic
-# preview: 
+# preview: Boxplot.png
 
 Boxplot template
 
