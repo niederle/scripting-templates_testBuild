@@ -12,10 +12,11 @@ jobs:
         uses: actions/checkout@v4
       - name: show environment variables
         run: set
-      - name: Copy template file
-        run: cp knime-scripting-templates/R/figure-templates.txt $RUNNER_WORKSPACE
-      - name: confirm
-        run: ls $RUNNER_WORKSPACE
+      - name: Copy template file and print commit
+        run: |
+          cp knime-scripting-templates/R/figure-templates.txt $RUNNER_WORKSPACE
+          ls $RUNNER_WORKSPACE
+          echo $GITHUB_WORKFLOW_SHA
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
