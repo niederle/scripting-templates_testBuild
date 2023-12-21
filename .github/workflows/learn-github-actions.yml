@@ -23,5 +23,5 @@ jobs:
         with:
           artifacts: "figure-templates.txt"
           commit: $GITHUB_WORKFLOW_SHA
-          name: "My first release"
+          tag: "test_tag"
       
