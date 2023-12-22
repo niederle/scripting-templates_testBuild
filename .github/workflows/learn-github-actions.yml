@@ -17,7 +17,7 @@ jobs:
           ls $RUNNER_WORKSPACE
           echo $GITHUB_WORKFLOW_SHA
       - name: Set timestamp
-        run: date +%Y-%m-%d_%H-%M-%S >> $DATETIME
+        run: date +%Y-%m-%d_%H-%M-%S >> $env:$DATETIME
       - name: run shell script to build template files
         run: |
           chmod 770 ${GITHUB_WORKSPACE}/build/build_templates.sh
