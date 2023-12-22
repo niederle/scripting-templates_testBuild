@@ -15,7 +15,7 @@ jobs:
       - name: set environment variables
         run: |
           echo "ASSETS_DIR=$RUNNER_WORKSPACE/assets" >> $GITHUB_ENV
-          echo "DATETIME=$(date +%Y-%m-%d_%H-%M-%S)" >> $GITHUB_ENV
+          echo "DATETIME=v$(date +%Y-%m-%d_%H-%M-%S)" >> $GITHUB_ENV
       - name: show all environment variables for this workflow
         run: env
       - name: create asset directory
@@ -30,4 +30,5 @@ jobs:
           artifacts: "${{ env.ASSETS_DIR }}/*"
           commit: master
           tag: "${{ env.DATETIME }}"
+          makeLatest: true
       
