@@ -18,7 +18,7 @@ jobs:
           echo $GITHUB_WORKFLOW_SHA
       - name: Set timestamp
         run: |
-          "DATETIME=12345" >> $GITHUB_ENV
+          echo "DATETIME=12345" >> $GITHUB_ENV
           echo $DATETIME
       - name: show all environment variables for this workflow
         run: env
