@@ -14,8 +14,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Copy template file and print commit
         run: |
-          ls $RUNNER_WORKSPACE
-          echo $GITHUB_WORKFLOW_SHA
+          echo "ASSETS_DIR=$RUNNER_WORKSPACE/assets" >> $GITHUB_ENV
+          mkdir $ASSETS_DIR
       - name: Set timestamp
         run: echo "DATETIME=$(date +%Y-%m-%d_%H-%M-%S)" >> $GITHUB_ENV
       - name: show all environment variables for this workflow
@@ -23,8 +23,8 @@ jobs:
       - name: run shell script to build template files
         run: |
           chmod 770 ${GITHUB_WORKSPACE}/build/build_templates.sh
-          ${GITHUB_WORKSPACE}/build/build_templates.sh ${GITHUB_WORKSPACE}/R/plots $RUNNER_WORKSPACE
-          more $RUNNER_WORKSPACE/R_plots_templates.txt
+          ${GITHUB_WORKSPACE}/build/build_templates.sh ${GITHUB_WORKSPACE}/R/plots $ASSETS_DIR
+          more $ASSETS_DIR/R_plots_templates.txt
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "${{ runner.workspace }}/figure-templates.txt"
