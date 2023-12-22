@@ -17,9 +17,7 @@ jobs:
           ls $RUNNER_WORKSPACE
           echo $GITHUB_WORKFLOW_SHA
       - name: Set timestamp
-        run: |
-          echo "DATETIME=12345" >> $GITHUB_ENV
-          echo $DATETIME
+        run: echo "DATETIME=$(date +%Y-%m-%d_%H-%M-%S)" >> $GITHUB_ENV
       - name: show all environment variables for this workflow
         run: env
       - name: run shell script to build template files
@@ -31,5 +29,5 @@ jobs:
         with:
           artifacts: "${{ runner.workspace }}/figure-templates.txt"
           commit: master
-          tag: "anotherTest"
+          tag: "${{ env.datetime }}"
       
