@@ -27,7 +27,7 @@ jobs:
           more $ASSETS_DIR/R_plots_templates.txt
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "${{ runner.workspace }}/figure-templates.txt"
+          artifacts: "${{ env.ASSETS_DIR }}/*"
           commit: master
           tag: "${{ env.DATETIME }}"
       
