@@ -12,14 +12,14 @@ jobs:
     steps:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
-      - name: Copy template file and print commit
+      - name: set environment variables
         run: |
           echo "ASSETS_DIR=$RUNNER_WORKSPACE/assets" >> $GITHUB_ENV
-          mkdir $ASSETS_DIR
-      - name: Set timestamp
-        run: echo "DATETIME=$(date +%Y-%m-%d_%H-%M-%S)" >> $GITHUB_ENV
+          echo "DATETIME=$(date +%Y-%m-%d_%H-%M-%S)" >> $GITHUB_ENV
       - name: show all environment variables for this workflow
         run: env
+      - name: create asset directory
+        run: mkdir $ASSETS_DIR
       - name: run shell script to build template files
         run: |
           chmod 770 ${GITHUB_WORKSPACE}/build/build_templates.sh
