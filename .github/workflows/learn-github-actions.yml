@@ -18,6 +18,8 @@ jobs:
           echo $GITHUB_WORKFLOW_SHA
       - name: Set timestamp
         run: date +%Y-%m-%d_%H-%M-%S >> $env:$DATETIME
+      - name: show all environment variables for this workflow
+        run: env
       - name: run shell script to build template files
         run: |
           chmod 770 ${GITHUB_WORKSPACE}/build/build_templates.sh
