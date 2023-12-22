@@ -29,5 +29,5 @@ jobs:
         with:
           artifacts: "${{ runner.workspace }}/figure-templates.txt"
           commit: master
-          tag: "${{ env.datetime }}"
+          tag: "${{ env.DATETIME }}"
       
