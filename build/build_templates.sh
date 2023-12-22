@@ -24,7 +24,7 @@ SEARCH_PATTERN="# name: .*"
 #TAG_REPO="# repository: scriptingRepo"
 #TAG_RELEASE="# release: releaseTag"
 REPO=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY
-RELEASE="test_build"
+RELEASE=$DATETIME
 COMMIT=$GITHUB_SHA
 
 TAG_REPO="# github_repository: $REPO"
